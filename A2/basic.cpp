@@ -1,29 +1,17 @@
-// An example parallel program using MPI
-// By: Nick from CoffeeBeforeArch
-
+using namespace std;
+#include <mpi.h>
 #include <iostream>
-#include <sstream>
-
-#include "mpi.h"
-
-int main(int argc, char *argv[]) {
-  // Initialize MPI
-  MPI_Init(&argc, &argv);
-
-  // Get the total number of tasks
-  int num_tasks;
-  MPI_Comm_size(MPI_COMM_WORLD, &num_tasks);
-
-  // Get the task ID
-  int task_id;
-  MPI_Comm_rank(MPI_COMM_WORLD, &task_id);
-
-  // Set up the string and print
-  std::stringstream ss;
-  ss << "Printing from task " << task_id << '/' << num_tasks << '\n';
-  std::cout << ss.str();
-
-  // Finish our MPI work
-  MPI_Finalize();
-  return 0;
+int main (int nargs, char* args[])
+{
+int numprocs, my_rank, i;
+MPI_Init (&nargs, &args);
+MPI_Comm_size (MPI_COMM_WORLD, &numprocs);
+MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);
+for (i = 0; i < numprocs; i++) {
+MPI_Barrier (MPI_COMM_WORLD);
+if (i == my_rank) {
+cout << "Hello world, I have rank " << my_rank <<
+" out of " << numprocs << endl;}
+}
+MPI_Finalize ();
 }
