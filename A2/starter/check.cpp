@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <ctime>  
 #include "template.hpp"
+#include <chrono>
+#include <iomanip>
 
 
 using namespace std; 
@@ -57,7 +59,7 @@ void write_output(double elapsed_time, const vector<vector<int>>& sorted_list, c
         return;
     }
     
-    outfile << elapsed_time << endl;
+    outfile << fixed << setprecision(2) << elapsed_time << endl;
     for(const auto& node_list : sorted_list) {
         for(const auto& node : node_list) {
             outfile << node << " ";
@@ -83,12 +85,15 @@ int main(int argc, char** argv) {
     cout << "Reading done for process" << rank << endl;
 
     if (rank == 0) {
-        clock_t start = clock();  // Start time
+        // clock_t start = clock();  // Start time
+        auto start = std::chrono::high_resolution_clock::now();
 
         vector<vector<int>> output = degree_cen(graph_part.first, graph_part.second, k);
         
-        clock_t end = clock();  // End time
-        double elapsed_time = double(end - start) / CLOCKS_PER_SEC;
+        // clock_t end = clock();  // End time
+        auto end = std::chrono::high_resolution_clock::now();
+        // double elapsed_time = double(end - start) / CLOCKS_PER_SEC;
+        double elapsed_time = std::chrono::duration<double, std::milli>(end - start).count();
 
         write_output(elapsed_time, output, output_file);
     }
